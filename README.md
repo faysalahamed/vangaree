@@ -71,13 +71,13 @@ outright, rerun with `npm install --legacy-peer-deps`.
    - the **direct connection** string (port `5432`) → `DIRECT_URL`
      (migrations need this one; the pooler can't run them)
 3. Go to **Project Settings → API** and copy the **Project URL** and
-   **anon public key** → `NEXT_PUBLIC_SUPABASE_URL` and
-   `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+   **publishable key** (starts `sb_publishable_`) → `NEXT_PUBLIC_SUPABASE_URL` and
+   `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 4. Copy `.env.example` to `.env` and fill in all four values above, plus a
    random `NEXTAUTH_SECRET` (generate one with `openssl rand -base64 32`).
 5. In the Supabase dashboard, go to **Storage** and create a new bucket
    named exactly `listing-photos`. Set it to **Public** (so listing photos
-   can be viewed without auth). The upload itself uses the anon key from
+   can be viewed without auth). The upload itself uses the publishable key from
    the browser, so no extra policy is required for a quick start — for
    production, add a Storage policy that restricts uploads to
    authenticated users.
@@ -99,7 +99,7 @@ outright, rerun with `npm install --legacy-peer-deps`.
 
 Push to GitHub and import the repo into Vercel. Add `DATABASE_URL`,
 `DIRECT_URL`, `NEXTAUTH_URL` (your production URL), `NEXTAUTH_SECRET`,
-`NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` as
+`NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` as
 environment variables in the Vercel project settings, then point
 `vangare.site`'s DNS at the Vercel project (Vercel's dashboard gives you the
 exact A/CNAME records once you add the domain).
