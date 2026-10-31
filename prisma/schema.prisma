@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  USER
+  TECHNICIAN
+  ADMIN
+}
+
+enum ListingType {
+  BUY
+  SELL
+  REPAIR_OFFER
+  REPAIR_REQUEST
+}
+
+enum Condition {
+  NEW
+  USED_GOOD
+  USED_FAIR
+  FOR_PARTS
+}
+
+enum ListingStatus {
+  ACTIVE
+  SOLD
+  CLOSED
+  DRAFT
+}
+
+enum EventType {
+  VIEW
+  SEARCH
+  FILTER
+}
+
+enum AdStatus {
+  ACTIVE
+  PAUSED
+  ENDED
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  phone         String    @unique
+  email         String?
+  passwordHash  String
+  location      String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+
+  listings      Listing[]
+  events        UserEvent[]
+  interests     UserInterest[]
+  sentMessages  Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+}
+
+model Listing {
+  id          String        @id @default(uuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  listingType ListingType
+  partType    String
+  phoneBrand  String
+  phoneModel  String
+  condition   Condition
+  price       Decimal?      @db.Decimal(10, 2)
+  description String
+  location    String
+  status      ListingStatus @default(ACTIVE)
+  createdAt   DateTime      @default(now())
+
+  photos      ListingPhoto[]
+  events      UserEvent[]
+  messages    Message[]
+  ads         Ad[]
+
+  @@index([partType, phoneBrand, phoneModel])
+  @@index([listingType, status])
+}
+
+model ListingPhoto {
+  id        String  @id @default(uuid())
+  listingId String
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  url       String
+  sortOrder Int     @default(0)
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  listingId  String
+  listing    Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  senderId   String
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  body       String
+  sentAt     DateTime @default(now())
+}
+
+// --- Browsing history, interests & ad targeting (see docs section 14) ---
+
+model UserEvent {
+  id         String     @id @default(uuid())
+  userId     String?
+  user       User?      @relation(fields: [userId], references: [id])
+  sessionId  String
+  eventType  EventType
+  listingId  String?
+  listing    Listing?   @relation(fields: [listingId], references: [id])
+  partType   String?
+  phoneBrand String?
+  createdAt  DateTime   @default(now())
+
+  @@index([userId])
+  @@index([sessionId])
+}
+
+model UserInterest {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  partType   String?
+  phoneBrand String?
+  score      Float    @default(0)
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, partType, phoneBrand])
+}
+
+model Ad {
+  id          String   @id @default(uuid())
+  listingId   String?
+  listing     Listing? @relation(fields: [listingId], references: [id])
+  sponsorName String?
+  partType    String?
+  phoneBrand  String?
+  priority    Int      @default(0)
+  status      AdStatus @default(ACTIVE)
+  startsAt    DateTime @default(now())
+  endsAt      DateTime?
+}
