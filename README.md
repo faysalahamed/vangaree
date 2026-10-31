@@ -93,7 +93,7 @@ outright, rerun with `npm install --legacy-peer-deps`.
    ```bash
    npm run dev
    ```
-   Visit http://localhost:3000.
+   Visit http://localhost:3004.
 
 ## Deploying
 
