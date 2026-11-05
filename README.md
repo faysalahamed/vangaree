@@ -4,6 +4,32 @@ A marketplace that connects people who need device parts or repairs with
 people who can supply them — built entirely on **Next.js** (App Router),
 no separate backend service.
 
+## Status: Phase 1 of the master project plan
+
+This project is being built against `requirement.txt` (the master project prompt), phase by
+phase, per that document's own process rules. **Phase 1 (UI foundation) is complete and
+validated**: `shadcn/ui`-style primitives, Lucide icons, the rebuilt homepage (all 18 Module-A
+sections from the spec — several are honest "Phase 2" placeholders where they need schema
+changes not yet made), responsive nav, redesigned listing cards, and a real search/filter/sort
+interface.
+
+**Validated:** `npx tsc --noEmit` (clean), `npx eslint .` (clean), `npm run build` compiles and
+type-checks successfully. The build's final step (static page data collection) requires the
+Prisma query engine binary, which needs a one-time `npx prisma generate` with normal internet
+access — this only failed in the sandbox that built this zip because its network doesn't reach
+`binaries.prisma.sh`; it will succeed on a normal machine.
+
+**Database schema is unchanged** — the current running schema (`prisma/schema.prisma`) is still
+the simple single-category model. The expanded 22-entity schema for the full master-prompt scope
+is written and reviewable in the project documentation (section 15.5) but **not yet migrated**,
+per the master prompt's own phase-by-phase process. Phase 2 will apply it.
+
+**New npm scripts:**
+```bash
+npm run lint       # ESLint (flat config, eslint-config-next's native export — not FlatCompat,
+                    # which crashes on a known eslint-config-next + ESLint 9 bug)
+```
+
 ## Stack
 
 - **Next.js 16** (App Router, TypeScript, Turbopack by default) — UI + API
