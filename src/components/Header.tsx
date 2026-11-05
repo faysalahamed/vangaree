@@ -42,6 +42,9 @@ export default function Header() {
         </form>
 
         <nav className="hidden md:flex items-center gap-3 ml-auto text-sm">
+          <Button asChild size="sm" variant="default">
+            <Link href="/listings">Find Compatible Parts</Link>
+          </Button>
           <Link href="/login" className="text-secondary font-medium hover:text-primary">
             Login
           </Link>
@@ -67,6 +70,11 @@ export default function Header() {
                 </SheetClose>
               ))}
             </div>
+            <SheetClose asChild>
+              <Button asChild className="w-full" variant="default">
+                <Link href="/listings">Find Compatible Parts</Link>
+              </Button>
+            </SheetClose>
             <SheetClose asChild>
               <Link href="/login" className="block py-2.5 text-sm font-medium text-secondary">
                 Login

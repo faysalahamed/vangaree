@@ -1,11 +1,9 @@
-import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import CategoryStrip from "@/components/CategoryStrip";
 import ListingSection from "@/components/marketplace/ListingSection";
 import ComingSoonSection from "@/components/marketplace/ComingSoonSection";
 import HowItWorks from "@/components/marketplace/HowItWorks";
 import TrustSafety from "@/components/marketplace/TrustSafety";
-import { Button } from "@/components/ui/button";
 
 async function fetchByType(type?: string, take = 4) {
   const listings = await prisma.listing.findMany({
@@ -41,18 +39,10 @@ export default async function HomePage() {
         <h1 className="text-3xl md:text-4xl font-extrabold text-primary max-w-2xl mx-auto mb-3">
           Don&apos;t Throw It Away. Find Its Match.
         </h1>
-        <p className="text-slate-500 max-w-lg mx-auto mb-8">
+        <p className="text-slate-500 max-w-lg mx-auto">
           Vangare connects people with damaged devices to people with the exact working part they
           need — exchange, sell, or find a repair technician near you.
         </p>
-        <div className="flex flex-wrap gap-3 justify-center">
-          <Button asChild size="lg" variant="default">
-            <Link href="/listings">Find Compatible Parts</Link>
-          </Button>
-          <Button asChild size="lg" variant="outline">
-            <Link href="/post-ad">+ Post Your Device</Link>
-          </Button>
-        </div>
       </section>
 
       <CategoryStrip />
