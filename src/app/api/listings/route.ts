@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-// GET /api/listings?partType=Display&brand=Samsung&type=SELL&q=iphone
+// GET /api/listings?partType=Display&brand=Samsung&type=SELL&q=iphone&minPrice=500&maxPrice=3000&condition=USED_GOOD&sort=price_asc
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
 
@@ -12,6 +12,16 @@ export async function GET(req: Request) {
   const listingType = searchParams.get("type") ?? undefined;
   const q = searchParams.get("q") ?? undefined;
   const location = searchParams.get("location") ?? undefined;
+  const condition = searchParams.get("condition") ?? undefined;
+  const minPrice = searchParams.get("minPrice");
+  const maxPrice = searchParams.get("maxPrice");
+  const sort = searchParams.get("sort") ?? "latest";
+
+  const orderBy =
+    sort === "oldest" ? { createdAt: "asc" as const } :
+    sort === "price_asc" ? { price: "asc" as const } :
+    sort === "price_desc" ? { price: "desc" as const } :
+    { createdAt: "desc" as const }; // "latest" default
 
   const listings = await prisma.listing.findMany({
     where: {
@@ -19,7 +29,14 @@ export async function GET(req: Request) {
       ...(partType && { partType }),
       ...(brand && { phoneBrand: brand }),
       ...(listingType && { listingType: listingType as never }),
+      ...(condition && { condition: condition as never }),
       ...(location && { location: { contains: location, mode: "insensitive" } }),
+      ...((minPrice || maxPrice) && {
+        price: {
+          ...(minPrice && { gte: Number(minPrice) }),
+          ...(maxPrice && { lte: Number(maxPrice) })
+        }
+      }),
       ...(q && {
         OR: [
           { phoneModel: { contains: q, mode: "insensitive" } },
@@ -28,7 +45,7 @@ export async function GET(req: Request) {
       })
     },
     include: { photos: { take: 1, orderBy: { sortOrder: "asc" } } },
-    orderBy: { createdAt: "desc" },
+    orderBy,
     take: 40
   });
 

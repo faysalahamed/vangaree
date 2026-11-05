@@ -1,5 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import { MapPin } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 type ListingCardProps = {
   id: string;
@@ -20,11 +23,11 @@ const TYPE_LABEL: Record<string, string> = {
   REPAIR_REQUEST: "Needs Repair"
 };
 
-const TYPE_STYLE: Record<string, string> = {
-  SELL: "bg-emerald-50 text-emerald-700",
-  BUY: "bg-sky-50 text-secondary",
-  REPAIR_OFFER: "bg-emerald-50 text-emerald-700",
-  REPAIR_REQUEST: "bg-sky-50 text-secondary"
+const TYPE_VARIANT: Record<string, "success" | "info"> = {
+  SELL: "success",
+  BUY: "info",
+  REPAIR_OFFER: "success",
+  REPAIR_REQUEST: "info"
 };
 
 export default function ListingCard({
@@ -39,26 +42,29 @@ export default function ListingCard({
   photoUrl
 }: ListingCardProps) {
   return (
-    <Link
-      href={`/listings/${id}`}
-      className="bg-white border border-line rounded-xl p-4 flex flex-col gap-2 hover:border-secondary transition-colors"
-    >
-      <div className="h-32 bg-line rounded-lg flex items-center justify-center text-slate-400 text-xs overflow-hidden relative">
-        {photoUrl ? (
-          <Image src={photoUrl} alt={`${phoneBrand} ${phoneModel} ${partType}`} fill className="object-cover" />
-        ) : (
-          "Photo"
-        )}
-      </div>
-      <span className={`inline-block w-fit text-xs font-semibold rounded px-2 py-0.5 ${TYPE_STYLE[listingType]}`}>
-        {TYPE_LABEL[listingType]}
-      </span>
-      <strong className="text-sm">
-        {phoneBrand} {phoneModel} {partType}
-      </strong>
-      <span className="text-xs text-slate-500">{condition.replace("_", " ")}</span>
-      {price != null && <span className="font-bold text-primary">৳ {price}</span>}
-      <span className="text-xs text-slate-400">{location}</span>
+    <Link href={`/listings/${id}`}>
+      <Card className="h-full overflow-hidden hover:border-secondary transition-colors">
+        <div className="h-32 bg-neutral-100 relative flex items-center justify-center text-neutral-400 text-xs">
+          {photoUrl ? (
+            <Image src={photoUrl} alt={`${phoneBrand} ${phoneModel} ${partType}`} fill className="object-cover" />
+          ) : (
+            "Photo"
+          )}
+        </div>
+        <CardContent className="pt-3 flex flex-col gap-1.5">
+          <Badge variant={TYPE_VARIANT[listingType]} className="w-fit">
+            {TYPE_LABEL[listingType]}
+          </Badge>
+          <strong className="text-sm text-primary-800 leading-snug">
+            {phoneBrand} {phoneModel} {partType}
+          </strong>
+          <span className="text-xs text-neutral-500">{condition.replace("_", " ")}</span>
+          {price != null && <span className="font-bold text-primary">৳ {price}</span>}
+          <span className="flex items-center gap-1 text-xs text-neutral-400">
+            <MapPin className="h-3 w-3" /> {location}
+          </span>
+        </CardContent>
+      </Card>
     </Link>
   );
 }

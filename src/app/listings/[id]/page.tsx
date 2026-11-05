@@ -39,7 +39,7 @@ export default async function ListingDetailPage({
           )}
         </div>
         <div className="flex gap-2">
-          {listing.photos.slice(1, 4).map((p) => (
+          {listing.photos.slice(1, 4).map((p: (typeof listing.photos)[number]) => (
             <div key={p.id} className="w-20 h-20 bg-line rounded-lg relative overflow-hidden">
               <Image src={p.url} alt="" fill className="object-cover" />
             </div>

@@ -1,19 +1,32 @@
 import Link from "next/link";
+import { Smartphone, MonitorSmartphone, BatteryCharging, Cpu, Camera, Plug, Headphones, Laptop, Tablet, Puzzle } from "lucide-react";
 
-const PARTS = ["Display", "Battery", "Camera", "Charging Port", "Speaker", "Back Panel"];
+const CATEGORIES = [
+  { name: "Mobile Phones", icon: Smartphone },
+  { name: "Mobile Displays", icon: MonitorSmartphone },
+  { name: "Mobile Batteries", icon: BatteryCharging },
+  { name: "Mobile Motherboards", icon: Cpu },
+  { name: "Mobile Cameras", icon: Camera },
+  { name: "Charging Ports", icon: Plug },
+  { name: "Mobile Accessories", icon: Headphones },
+  { name: "Laptop Components", icon: Laptop },
+  { name: "Tablet Components", icon: Tablet },
+  { name: "Other Electronics", icon: Puzzle }
+];
 
 export default function CategoryStrip() {
   return (
-    <div className="px-6 md:px-12 pb-8">
-      <h2 className="text-sm font-semibold text-primary mb-3">Browse by part</h2>
-      <div className="flex gap-3 flex-wrap">
-        {PARTS.map((part) => (
+    <div className="px-4 md:px-12 pb-10">
+      <h2 className="text-sm font-semibold text-primary mb-4">Browse Categories</h2>
+      <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+        {CATEGORIES.map(({ name, icon: Icon }) => (
           <Link
-            key={part}
-            href={`/listings?partType=${encodeURIComponent(part)}`}
-            className="border border-line rounded-full px-4 py-2 text-sm text-primary bg-white hover:border-secondary"
+            key={name}
+            href={`/listings?partType=${encodeURIComponent(name)}`}
+            className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-2 py-4 text-center hover:border-secondary"
           >
-            {part}
+            <Icon className="h-5 w-5 text-secondary" />
+            <span className="text-xs font-medium text-neutral-700 leading-tight">{name}</span>
           </Link>
         ))}
       </div>
