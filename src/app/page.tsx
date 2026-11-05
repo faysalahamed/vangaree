@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import CategoryStrip from "@/components/CategoryStrip";
+import HeroSlider from "@/components/marketplace/HeroSlider";
 import ListingSection from "@/components/marketplace/ListingSection";
 import ComingSoonSection from "@/components/marketplace/ComingSoonSection";
 import HowItWorks from "@/components/marketplace/HowItWorks";
@@ -44,6 +45,8 @@ export default async function HomePage() {
           need — exchange, sell, or find a repair technician near you.
         </p>
       </section>
+
+      <HeroSlider />
 
       <CategoryStrip />
 
