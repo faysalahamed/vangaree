@@ -1,0 +1,690 @@
+MASTER PROJECT PROMPT: VANGARE.SITE
+1. Project Overview
+Build a production-ready, responsive, modern classified marketplace named Vangare.site.
+Vangare is a Bangladesh-focused marketplace for damaged electronics, working spare parts, component exchanges, second-hand devices, and repair services.
+The business concept is to connect people who own devices with different damaged components so they can exchange usable components, sell spare parts, purchase required components, or find repair services.
+Example Business Scenario
+Person A owns a Samsung Galaxy A52:
+•	Display: Damaged.
+•	Battery: Working.
+•	Motherboard: Working.
+•	Wants: A replacement display.
+•	Offers: Working battery or device components.
+Person B owns a Samsung Galaxy A52:
+•	Display: Working.
+•	Battery: Damaged.
+•	Motherboard: Working.
+•	Wants: A replacement battery.
+•	Offers: Working display.
+The system should automatically identify these two users as potential exchange partners.
+The main competitive advantage of Vangare is its intelligent component-matching engine.
+2. Design Inspiration
+Use Bikroy.com as the primary UX inspiration.
+Reference: https://bikroy.com
+Study its:
+•	Homepage structure.
+•	Search experience.
+•	Category navigation.
+•	Classified advertisement cards.
+•	Location-based browsing.
+•	Product listing details.
+•	Advertisement submission process.
+•	Seller profiles.
+•	Search filters.
+IMPORTANT:
+Do not copy Bikroy's logo, branding, source code, or exact design. Create a unique Vangare visual identity and layout inspired by the simplicity of classified marketplaces.
+3. Technology Stack
+Use the following technologies:
+Frontend:
+•	Next.js with App Router.
+•	React.
+•	TypeScript (strict mode).
+•	Tailwind CSS.
+•	shadcn/ui.
+•	Lucide icons.
+•	React Hook Form.
+•	Zod validation.
+Backend:
+•	Next.js Route Handlers.
+•	Server Actions where appropriate.
+•	Service and repository architecture.
+•	TypeScript business logic.
+Database:
+•	PostgreSQL.
+•	Prisma ORM.
+•	Proper relational database design.
+•	Database migrations.
+•	Indexing and foreign-key constraints.
+Authentication:
+•	Secure session-based authentication.
+•	Phone number verification through OTP.
+•	Email/password authentication.
+•	Google authentication as an optional feature.
+•	Role-based access control.
+•	Secure password hashing.
+•	HttpOnly, Secure, SameSite cookies.
+Storage:
+•	Cloudinary or S3-compatible object storage.
+•	Image compression.
+•	Image thumbnails.
+•	Multiple photos per listing.
+Other:
+•	Zod.
+•	React Hook Form.
+•	OpenStreetMap / Leaflet.
+•	Email and SMS notifications.
+•	Vitest or Jest.
+•	Playwright for end-to-end testing.
+Use stable, mutually compatible dependency versions. Lock dependency versions and document setup requirements.
+4. Branding and Visual Identity
+Brand: Vangare
+Domain: vangare.site
+Target market: Bangladesh.
+Primary language: English.
+Secondary language: Bangla.
+Currency: BDT (৳).
+Design characteristics:
+•	Modern.
+•	Clean.
+•	Professional.
+•	Mobile-first.
+•	Marketplace-oriented.
+•	Easy to navigate.
+•	Trustworthy.
+•	Minimal visual clutter.
+Suggested color palette:
+•	Primary: Dark green.
+•	Secondary: Deep navy.
+•	Accent: Fresh mint green.
+•	Background: White and light gray.
+•	Text: Dark charcoal.
+Create a unique logo using a recycling/exchange concept combined with an electronic component symbol.
+Create consistent typography, spacing, cards, buttons, badges, form controls and navigation.
+Support responsive desktop, tablet and mobile layouts.
+5. Main Website Modules
+A. Homepage
+Create an attractive marketplace homepage containing:
+1.	Header with Vangare logo.
+2.	Main navigation.
+3.	Login/register buttons.
+4.	Prominent search bar.
+5.	Location selector.
+6.	Hero section with the slogan:
+"Don't Throw It Away. Find Its Match."
+7.	Find Compatible Parts CTA.
+8.	Browse Categories.
+9.	Latest Listings.
+10.	Recently Added Damaged Devices.
+11.	Available Spare Parts.
+12.	Potential Matches.
+13.	Nearby Listings.
+14.	Popular Mobile Brands.
+15.	Repair Service Providers.
+16.	How Vangare Works section.
+17.	Trust and Safety section.
+18.	Footer.
+B. Categories
+Initially support:
+•	Mobile Phones.
+•	Mobile Displays.
+•	Mobile Batteries.
+•	Mobile Motherboards.
+•	Mobile Cameras.
+•	Charging Ports.
+•	Mobile Accessories.
+•	Laptop Components.
+•	Tablet Components.
+•	Other Electronics.
+Make categories dynamically manageable through the admin dashboard.
+C. Brand and Device Model Management
+Create master data for:
+•	Samsung.
+•	Apple.
+•	Xiaomi.
+•	Redmi.
+•	Realme.
+•	Oppo.
+•	Vivo.
+•	OnePlus.
+•	Google Pixel.
+•	Tecno.
+•	Infinix.
+•	Nokia.
+•	Motorola.
+•	Other brands.
+Allow administrators to add brands and device models.
+Each device model should support:
+•	Brand.
+•	Model name.
+•	Model number.
+•	Variant.
+•	Release year.
+•	Device category.
+•	Compatibility information.
+Never assume two devices are compatible simply because their brand names match.
+D. Advertisement Management
+Users can create different listing types:
+1.	Sell a damaged device.
+2.	Sell working spare parts.
+3.	Exchange device components.
+4.	Find a required component.
+5.	Request repair services.
+6.	Sell a partially working device.
+Advertisement fields:
+•	Listing title.
+•	Category.
+•	Brand.
+•	Device model.
+•	Model number.
+•	Variant.
+•	Overall condition.
+•	Component conditions.
+•	Available components.
+•	Required components.
+•	Listing type.
+•	Price.
+•	Negotiable status.
+•	Exchange preference.
+•	Description.
+•	Location.
+•	Photos.
+•	Contact preferences.
+Each listing should support multiple component conditions.
+Component statuses:
+•	WORKING.
+•	DAMAGED.
+•	PARTIALLY_WORKING.
+•	MISSING.
+•	UNKNOWN.
+Listing statuses:
+•	DRAFT.
+•	PENDING_APPROVAL.
+•	ACTIVE.
+•	REJECTED.
+•	SOLD.
+•	EXCHANGED.
+•	EXPIRED.
+•	DEACTIVATED.
+E. Intelligent Component Matching Engine
+This is the most important module.
+Implement a dedicated matching service.
+Example:
+Listing A:
+•	Device: Samsung Galaxy A52.
+•	Working: Battery, motherboard, camera.
+•	Damaged: Display.
+•	Needs: Display.
+•	Offers: Battery or exchange.
+Listing B:
+•	Device: Samsung Galaxy A52.
+•	Working: Display, motherboard, camera.
+•	Damaged: Battery.
+•	Needs: Battery.
+•	Offers: Display or exchange.
+The system should identify this reciprocal match.
+Matching requirements:
+1.	Compare exact brand.
+2.	Compare exact device model.
+3.	Compare model number and variant.
+4.	Compare required components with available working components.
+5.	Support reciprocal component exchange.
+6.	Consider location proximity.
+7.	Exclude inactive and expired advertisements.
+8.	Exclude a user's own listings.
+9.	Avoid duplicate matches.
+10.	Update match status when a listing changes.
+Suggested scoring:
+•	Exact device model: 40 points.
+•	Required component availability: 25 points.
+•	Reciprocal exchange compatibility: 20 points.
+•	Location proximity: 10 points.
+•	Active and verified listings: 5 points.
+Maximum: 100 points.
+Important business rule:
+Exact model and component compatibility must be hard eligibility checks. A high score must never compensate for an incompatible device.
+Matching result should show:
+•	Matched user.
+•	Device model.
+•	Available component.
+•	Required component.
+•	Location.
+•	Compatibility explanation.
+•	Match percentage.
+•	Contact or chat button.
+Support match statuses:
+•	NEW.
+•	VIEWED.
+•	INTERESTED.
+•	ACCEPTED.
+•	REJECTED.
+•	COMPLETED.
+Allow users to express interest and negotiate.
+Do not automatically complete an exchange.
+F. Search and Filtering
+Implement global search.
+Search by:
+•	Brand.
+•	Model.
+•	Model number.
+•	Component.
+•	Device condition.
+•	Listing type.
+•	Price range.
+•	Location.
+•	Available component.
+•	Required component.
+Filters:
+•	Division.
+•	District.
+•	City.
+•	Area.
+•	Brand.
+•	Model.
+•	Component.
+•	Price.
+•	Condition.
+•	Listing type.
+•	Date posted.
+Sorting:
+•	Latest.
+•	Oldest.
+•	Lowest price.
+•	Highest price.
+•	Nearest location.
+•	Best match.
+Implement server-side pagination and database indexes.
+G. Listing Details
+Each listing detail page should show:
+•	Image gallery.
+•	Listing title.
+•	Price.
+•	Listing type.
+•	Device brand and model.
+•	Component condition table.
+•	Available components.
+•	Required components.
+•	Description.
+•	Location.
+•	Seller profile.
+•	Posted date.
+•	Listing ID.
+•	Contact seller.
+•	Send message.
+•	Add to favorites.
+•	Report listing.
+•	Similar advertisements.
+•	Potential matching advertisements.
+H. Messaging
+Implement user-to-user messaging.
+Features:
+•	Conversation creation.
+•	Text messaging.
+•	Unread message count.
+•	Conversation history.
+•	Listing reference.
+•	Message timestamps.
+•	Block user.
+•	Report conversation.
+Only authenticated users can communicate.
+Protect users' personal contact details.
+I. User Dashboard
+Create a professional dashboard.
+Menu:
+•	Overview.
+•	My Listings.
+•	My Matches.
+•	Messages.
+•	Favorites.
+•	Notifications.
+•	Profile.
+•	Account Settings.
+Dashboard statistics:
+•	Total listings.
+•	Active listings.
+•	Pending listings.
+•	Potential matches.
+•	Messages received.
+•	Completed exchanges.
+J. Admin Dashboard
+Implement role-based administration.
+Roles:
+•	SUPER_ADMIN.
+•	ADMIN.
+•	MODERATOR.
+•	USER.
+Admin features:
+•	Manage users.
+•	Manage brands.
+•	Manage device models.
+•	Manage categories.
+•	Manage components.
+•	Approve advertisements.
+•	Reject advertisements.
+•	Review reported listings.
+•	Manage suspicious accounts.
+•	View matches.
+•	Manage locations.
+•	View dashboard analytics.
+•	Manage platform settings.
+Record important administrative actions in an audit log.
+6. Database Architecture
+Use PostgreSQL and Prisma.
+Create normalized relational tables.
+Core entities:
+1.	User
+2.	UserProfile
+3.	Role
+4.	UserRole
+5.	Category
+6.	Brand
+7.	DeviceModel
+8.	Component
+9.	ComponentCompatibility
+10.	Listing
+11.	ListingComponent
+12.	ListingImage
+13.	Match
+14.	Conversation
+15.	ConversationParticipant
+16.	Message
+17.	Favorite
+18.	Review
+19.	Report
+20.	Notification
+21.	Location
+22.	AuditLog
+Important database rules:
+•	A listing belongs to a user.
+•	A listing belongs to a device model.
+•	A listing can have multiple images.
+•	A listing can have multiple component records.
+•	A component record must identify whether it is AVAILABLE or NEEDED.
+•	Match records must reference two different listings.
+•	A user cannot create duplicate favorites.
+•	Messages must belong to valid conversations.
+•	Soft-delete important user and listing records where appropriate.
+•	Use timestamps consistently.
+•	Add appropriate unique constraints and indexes.
+For matching performance, index:
+•	Device model ID.
+•	Component ID.
+•	Component role.
+•	Component condition.
+•	Listing status.
+•	Location ID.
+Generate the complete Prisma schema and migration files.
+7. Suggested Project Structure
+Use a modular, maintainable structure.
+src/
+app/
+(public)/
+page.tsx
+listings/
+categories/
+matches/
+users/
+(auth)/
+login/
+register/
+dashboard/
+page.tsx
+listings/
+matches/
+messages/
+favorites/
+profile/
+admin/
+users/
+listings/
+categories/
+brands/
+models/
+reports/
+api/
+auth/
+listings/
+matches/
+messages/
+categories/
+brands/
+models/
+notifications/
+components/
+layout/
+navigation/
+marketplace/
+listings/
+matching/
+forms/
+dashboard/
+admin/
+shared/
+ui/
+modules/
+auth/
+users/
+listings/
+matching/
+messaging/
+categories/
+devices/
+notifications/
+moderation/
+lib/
+prisma.ts
+auth.ts
+storage.ts
+validations/
+utils/
+services/
+matching.service.ts
+listing.service.ts
+notification.service.ts
+repositories/
+listing.repository.ts
+matching.repository.ts
+types/
+hooks/
+config/
+prisma/
+schema.prisma
+migrations/
+seed.ts
+tests/
+unit/
+integration/
+e2e/
+public/
+images/
+icons/
+Keep business logic outside React components.
+8. API Design
+Create REST-style APIs using Next.js Route Handlers.
+Authentication:
+•	POST /api/auth/register
+•	POST /api/auth/login
+•	POST /api/auth/logout
+•	POST /api/auth/verify-otp
+Listings:
+•	GET /api/listings
+•	POST /api/listings
+•	GET /api/listings/[id]
+•	PATCH /api/listings/[id]
+•	DELETE /api/listings/[id]
+Matching:
+•	GET /api/matches
+•	GET /api/matches/[id]
+•	POST /api/matches/[id]/interest
+•	POST /api/matches/[id]/accept
+•	POST /api/matches/[id]/reject
+Messaging:
+•	GET /api/conversations
+•	POST /api/conversations
+•	GET /api/conversations/[id]/messages
+•	POST /api/conversations/[id]/messages
+Other:
+•	GET /api/categories
+•	GET /api/brands
+•	GET /api/models
+•	GET /api/components
+•	GET /api/notifications
+•	POST /api/reports
+Admin APIs must require appropriate permissions.
+Implement:
+•	Consistent response structures.
+•	Input validation.
+•	Error handling.
+•	Authentication checks.
+•	Authorization checks.
+•	Pagination.
+•	Logging.
+9. Security Requirements
+Treat security as a first-class requirement.
+Implement:
+•	Secure password hashing.
+•	Secure session management.
+•	HttpOnly cookies.
+•	CSRF protection where applicable.
+•	Rate limiting.
+•	Input validation.
+•	XSS prevention.
+•	SQL injection prevention.
+•	File upload validation.
+•	Image size limits.
+•	Authorization at the server level.
+•	Protection against unauthorized listing modifications.
+•	Admin audit logging.
+Do not expose secrets in frontend code.
+Never trust client-submitted user IDs or role information.
+10. Bangladesh-Specific Requirements
+Support:
+•	Bangladesh phone number format.
+•	OTP verification.
+•	BDT currency.
+•	Bangla and English.
+•	Bangladesh divisions.
+•	Districts.
+•	Upazilas.
+•	Local areas.
+•	Location-based advertisements.
+Make the website easy to use for nontechnical users.
+11. SEO and Performance
+Implement:
+•	SEO-friendly listing URLs.
+•	Dynamic metadata.
+•	Open Graph metadata.
+•	Sitemap.
+•	robots.txt.
+•	Structured data where appropriate.
+•	Server-rendered listing pages.
+•	Image optimization.
+•	Lazy loading.
+•	Pagination.
+•	Database query optimization.
+•	Caching where appropriate.
+12. Testing
+Create tests for:
+•	Registration and login.
+•	Listing creation.
+•	Listing modification.
+•	Component status management.
+•	Device model compatibility.
+•	Reciprocal component matching.
+•	Match scoring.
+•	Search filters.
+•	Messaging authorization.
+•	Admin permissions.
+•	Expired listing exclusion.
+•	Duplicate match prevention.
+Use Playwright for complete user journeys.
+13. Development Execution Plan
+Develop the application in the following order.
+PHASE 1:
+•	Initialize Next.js.
+•	Configure TypeScript.
+•	Install Tailwind CSS and shadcn/ui.
+•	Create the global layout.
+•	Build the homepage.
+•	Create responsive navigation.
+•	Create the listing card design.
+•	Implement the search interface.
+PHASE 2:
+•	Configure PostgreSQL.
+•	Configure Prisma.
+•	Create the database schema.
+•	Generate migrations.
+•	Add seed data for Bangladesh locations, brands, models and components.
+PHASE 3:
+•	Implement registration.
+•	Implement login.
+•	Implement secure sessions.
+•	Implement user profiles.
+PHASE 4:
+•	Implement listing creation.
+•	Implement component condition forms.
+•	Implement image uploads.
+•	Implement advertisement moderation.
+PHASE 5:
+•	Implement search.
+•	Implement category browsing.
+•	Implement listing details.
+•	Implement filtering and pagination.
+PHASE 6:
+•	Implement the intelligent matching engine.
+•	Implement reciprocal matching.
+•	Implement match scoring.
+•	Implement match recommendations.
+•	Implement match notifications.
+PHASE 7:
+•	Implement messaging.
+•	Implement user dashboards.
+•	Implement favorites.
+•	Implement reviews.
+PHASE 8:
+•	Implement admin dashboard.
+•	Implement reporting and moderation.
+•	Implement analytics.
+PHASE 9:
+•	Implement automated tests.
+•	Perform security testing.
+•	Optimize performance.
+•	Configure production environment.
+•	Deploy to vangare.site.
+14. Development Instructions for AI
+Follow these instructions strictly:
+1.	Do not generate the entire project in one response.
+2.	Work phase by phase.
+3.	First provide the complete architecture and database ER diagram.
+4.	Then implement Phase 1.
+5.	Generate complete runnable files, not isolated code snippets.
+6.	Always show the exact file paths.
+7.	Explain how to run each phase.
+8.	Never leave incomplete TODO placeholders in implemented features.
+9.	Ensure that generated code is compatible with the selected package versions.
+10.	Run type checking, linting and tests after each implementation phase.
+11.	Fix errors before moving to the next phase.
+12.	Keep the database schema and TypeScript types consistent.
+13.	Follow clean architecture and reusable component principles.
+14.	Provide .env.example without real secrets.
+15.	Provide complete README.md and installation instructions.
+16.	Include database seed scripts.
+17.	Use realistic Bangladesh marketplace seed data.
+18.	Ensure mobile responsiveness throughout development.
+15. Final Expected Deliverable
+Deliver a complete, production-oriented marketplace for Vangare.site with:
+•	Modern Bikroy-inspired marketplace UX.
+•	Unique Vangare branding.
+•	Responsive Next.js frontend.
+•	PostgreSQL database.
+•	Secure authentication.
+•	Classified advertisements.
+•	Working and damaged component management.
+•	Intelligent reciprocal matching.
+•	User-to-user messaging.
+•	Admin moderation.
+•	Bangladesh-specific location support.
+•	SEO.
+•	Automated testing.
+•	Production deployment documentation.
+Start by preparing the architecture, ER diagram, database schema, and complete project structure. Wait for my approval before implementing Phase 1.
+

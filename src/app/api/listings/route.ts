@@ -40,6 +40,8 @@ export async function GET(req: Request) {
       ...(q && {
         OR: [
           { phoneModel: { contains: q, mode: "insensitive" } },
+          { phoneBrand: { contains: q, mode: "insensitive" } },
+          { partType: { contains: q, mode: "insensitive" } },
           { description: { contains: q, mode: "insensitive" } }
         ]
       })

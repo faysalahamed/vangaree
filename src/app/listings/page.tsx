@@ -1,6 +1,11 @@
 import { prisma } from "@/lib/prisma";
-import ListingCard from "@/components/ListingCard";
 import SearchFilters from "@/components/marketplace/SearchFilters";
+import ListingsResultsView from "@/components/marketplace/ListingsResultsView";
+import ListingsInitialEmptyState from "@/components/marketplace/ListingsInitialEmptyState";
+import ListingsPageHeader from "@/components/marketplace/ListingsPageHeader";
+import AdvertisementBanner from "@/components/marketplace/AdvertisementBanner";
+import SearchLogger from "@/components/SearchLogger";
+import { ListingItem } from "@/components/marketplace/ClassifiedListingCard";
 
 type SearchParams = {
   q?: string;
@@ -22,68 +27,109 @@ export default async function ListingsPage({
   const { q, partType, brand, type, condition, location, minPrice, maxPrice, sort } =
     await searchParams;
 
-  const orderBy =
-    sort === "oldest" ? ({ createdAt: "asc" } as const) :
-    sort === "price_asc" ? ({ price: "asc" } as const) :
-    sort === "price_desc" ? ({ price: "desc" } as const) :
-    ({ createdAt: "desc" } as const);
+  // Determine if user has performed an active search/filter
+  const hasSearched = Boolean(
+    q?.trim() ||
+    partType?.trim() ||
+    brand?.trim() ||
+    type?.trim() ||
+    condition?.trim() ||
+    location?.trim() ||
+    minPrice?.trim() ||
+    maxPrice?.trim()
+  );
 
-  const listings = await prisma.listing.findMany({
-    where: {
-      status: "ACTIVE",
-      ...(partType && { partType }),
-      ...(brand && { phoneBrand: brand }),
-      ...(type && { listingType: type as never }),
-      ...(condition && { condition: condition as never }),
-      ...(location && { location: { contains: location, mode: "insensitive" } }),
-      ...((minPrice || maxPrice) && {
-        price: {
-          ...(minPrice && { gte: Number(minPrice) }),
-          ...(maxPrice && { lte: Number(maxPrice) })
-        }
-      }),
-      ...(q && {
-        OR: [
-          { phoneModel: { contains: q, mode: "insensitive" } },
-          { description: { contains: q, mode: "insensitive" } }
-        ]
-      })
-    },
-    include: { photos: { take: 1, orderBy: { sortOrder: "asc" } } },
-    orderBy,
-    take: 60
-  });
+  let listings: ListingItem[] = [];
+
+  // ONLY query database if user has searched! Default shows NO ads.
+  if (hasSearched) {
+    const orderBy =
+      sort === "oldest" ? ({ createdAt: "asc" } as const) :
+      sort === "price_asc" ? ({ price: "asc" } as const) :
+      sort === "price_desc" ? ({ price: "desc" } as const) :
+      ({ createdAt: "desc" } as const);
+
+    const records = await prisma.listing.findMany({
+      where: {
+        status: "ACTIVE",
+        ...(partType && { partType: { contains: partType, mode: "insensitive" } }),
+        ...(brand && { phoneBrand: { contains: brand, mode: "insensitive" } }),
+        ...(type && { listingType: type as never }),
+        ...(condition && { condition: condition as never }),
+        ...(location && { location: { contains: location, mode: "insensitive" } }),
+        ...((minPrice || maxPrice) && {
+          price: {
+            ...(minPrice && { gte: Number(minPrice) }),
+            ...(maxPrice && { lte: Number(maxPrice) })
+          }
+        }),
+        ...(q && {
+          OR: [
+            { phoneModel: { contains: q, mode: "insensitive" } },
+            { phoneBrand: { contains: q, mode: "insensitive" } },
+            { partType: { contains: q, mode: "insensitive" } },
+            { description: { contains: q, mode: "insensitive" } }
+          ]
+        })
+      },
+      include: { photos: { take: 1, orderBy: { sortOrder: "asc" } } },
+      orderBy,
+      take: 60
+    });
+
+    listings = records.map((l: (typeof records)[number]) => ({
+      id: l.id,
+      listingType: l.listingType,
+      phoneBrand: l.phoneBrand,
+      phoneModel: l.phoneModel,
+      partType: l.partType,
+      condition: l.condition,
+      price: l.price?.toString() ?? null,
+      location: l.location,
+      photoUrl: l.photos[0]?.url,
+      description: l.description
+    }));
+  }
 
   return (
-    <div className="px-4 md:px-12 py-10">
-      <h1 className="text-xl font-bold text-primary mb-5">
-        {q ? `Results for "${q}"` : "Browse Listings"}
-      </h1>
+    <div className="bg-[#ddf1fd] min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto">
+        
+        {/* Bilingual Page Header */}
+        <ListingsPageHeader />
 
-      <SearchFilters defaults={{ q, partType, type, condition, location, minPrice, maxPrice, sort }} />
+        {/* Senior Designer Search & Filter Center */}
+        <SearchFilters 
+          defaults={{ q, partType, brand, type, condition, location, minPrice, maxPrice, sort }} 
+        />
 
-      <p className="text-xs text-neutral-400 mb-4">{listings.length} result{listings.length === 1 ? "" : "s"}</p>
-
-      {listings.length === 0 ? (
-        <p className="text-sm text-neutral-400">No listings match these filters yet.</p>
-      ) : (
-        <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
-          {listings.map((l: (typeof listings)[number]) => (
-            <ListingCard
-              key={l.id}
-              id={l.id}
-              listingType={l.listingType}
-              phoneBrand={l.phoneBrand}
-              phoneModel={l.phoneModel}
-              partType={l.partType}
-              condition={l.condition}
-              price={l.price?.toString() ?? null}
-              location={l.location}
-              photoUrl={l.photos[0]?.url}
-            />
-          ))}
+        {/* Top of Search Sponsored Advertisement */}
+        <div className="mt-6 mb-2">
+          <AdvertisementBanner placement="TOP_SEARCH" variant="top_search" />
         </div>
-      )}
+
+        {/* Content Area */}
+        {hasSearched && (
+          <SearchLogger
+            searchQuery={q}
+            partType={partType}
+            phoneBrand={brand}
+            location={location}
+          />
+        )}
+        {!hasSearched ? (
+          /* By default: Show NO ads. Show user-friendly search guidance & suggestions */
+          <ListingsInitialEmptyState />
+        ) : (
+          /* After search: Display results in the homepage trendy product classified design */
+          <ListingsResultsView 
+            listings={listings} 
+            resultCount={listings.length}
+            activeQuery={q || partType || brand}
+          />
+        )}
+
+      </div>
     </div>
   );
 }

@@ -37,8 +37,8 @@ export async function recomputeUserInterests(userId: string) {
       where: {
         userId_partType_phoneBrand: {
           userId,
-          partType: kind === "part" ? value : null,
-          phoneBrand: kind === "brand" ? value : null
+          partType: (kind === "part" ? value : null) as any,
+          phoneBrand: (kind === "brand" ? value : null) as any
         }
       },
       create: {
